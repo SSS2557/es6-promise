@@ -16,7 +16,7 @@ var map    = stew.map;
 
 var lib       = find('lib');
 var testDir   = find('test');
-var testFiles = find('test/{index.html,worker.js}');
+var testFiles = find('test/{index.html,worker.js,zone.js}');
 
 var json3     = mv(find('node_modules/json3/lib/{json3.js}'), 'node_modules/json3/lib/', 'test/');
 var mocha     = mv(find('node_modules/mocha/mocha.{js,css}'), 'node_modules/mocha/',    'test/');
