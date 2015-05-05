@@ -34,15 +34,18 @@
     var lib$es6$promise$asap$$toString = {}.toString;
     var lib$es6$promise$asap$$vertxNext;
     function lib$es6$promise$asap$$asap(callback, arg) {
-      lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
-      lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
-      lib$es6$promise$asap$$len += 2;
-      if (lib$es6$promise$asap$$len === 2) {
-        // If len is 2, that means that we need to schedule an async flush.
-        // If additional callbacks are queued before the queue is flushed, they
-        // will be processed by this flush that we are scheduling.
-        lib$es6$promise$asap$$scheduleFlush();
-      }
+      window.zone.scheduleMicrotask(function() {
+        callback(arg);
+      });
+      //queue[len] = callback;
+      //queue[len + 1] = arg;
+      //len += 2;
+      //if (len === 2) {
+      //  // If len is 2, that means that we need to schedule an async flush.
+      //  // If additional callbacks are queued before the queue is flushed, they
+      //  // will be processed by this flush that we are scheduling.
+      //  scheduleFlush();
+      //}
     }
 
     var lib$es6$promise$asap$$default = lib$es6$promise$asap$$asap;
