@@ -33,6 +33,8 @@
     var lib$es6$promise$asap$$len = 0;
     var lib$es6$promise$asap$$toString = {}.toString;
     var lib$es6$promise$asap$$vertxNext;
+    var lib$es6$promise$asap$$customSchedulerFn;
+
     function lib$es6$promise$asap$$asap(callback, arg) {
       lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
       lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
@@ -41,11 +43,18 @@
         // If len is 2, that means that we need to schedule an async flush.
         // If additional callbacks are queued before the queue is flushed, they
         // will be processed by this flush that we are scheduling.
-        lib$es6$promise$asap$$scheduleFlush();
+        if (lib$es6$promise$asap$$customSchedulerFn) {
+          lib$es6$promise$asap$$customSchedulerFn(lib$es6$promise$asap$$flush);
+        } else {
+          lib$es6$promise$asap$$scheduleFlush();
+        }
       }
     }
 
     var lib$es6$promise$asap$$default = lib$es6$promise$asap$$asap;
+    function lib$es6$promise$asap$$setScheduler(scheduleFn) {
+      lib$es6$promise$asap$$customSchedulerFn = scheduleFn;
+    }
 
     var lib$es6$promise$asap$$browserWindow = (typeof window !== 'undefined') ? window : undefined;
     var lib$es6$promise$asap$$browserGlobal = lib$es6$promise$asap$$browserWindow || {};
@@ -662,6 +671,9 @@
     lib$es6$promise$promise$$Promise.race = lib$es6$promise$promise$race$$default;
     lib$es6$promise$promise$$Promise.resolve = lib$es6$promise$promise$resolve$$default;
     lib$es6$promise$promise$$Promise.reject = lib$es6$promise$promise$reject$$default;
+    // _setScheduler() and _asap() must be non-enumerable
+    Object.defineProperty(lib$es6$promise$promise$$Promise, '_setScheduler', {value: lib$es6$promise$asap$$setScheduler});
+    Object.defineProperty(lib$es6$promise$promise$$Promise, '_asap', {value: lib$es6$promise$asap$$default});
 
     lib$es6$promise$promise$$Promise.prototype = {
       constructor: lib$es6$promise$promise$$Promise,
